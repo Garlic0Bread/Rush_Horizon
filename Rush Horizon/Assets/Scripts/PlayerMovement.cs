@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class MyPlayerMovement : MonoBehaviour
 {
@@ -6,12 +8,12 @@ public class MyPlayerMovement : MonoBehaviour
     public float horizontalSpeed = 3;
     public float jumpForce = 5f; 
     private bool isGrounded = true;
+    [SerializeField] AudioSource coinFx;
 
     private Rigidbody rb;
 
     void Start()
     {
-        // Get the Rigidbody component
         rb = GetComponent<Rigidbody>();
     }
 
@@ -32,12 +34,17 @@ public class MyPlayerMovement : MonoBehaviour
             isGrounded = false; // Player is in the air
         }
     }
-    // Detect collisions to check if the player is grounded
+
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Ground")) // Make sure your ground object has the tag "Ground"
+        if (collision.gameObject.CompareTag("Ground")) 
         {
             isGrounded = true;
+        }
+        if (collision.gameObject.CompareTag("Coin"))
+        {
+            coinFx.Play();
+            Destroy(collision.gameObject);
         }
     }
 }
